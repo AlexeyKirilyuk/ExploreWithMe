@@ -1,0 +1,15 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="StatsApp" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="ru.practicum.stats.StatsApp" />
+    <module name="stats-server" />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="ru.practicum.stats.StatsApp" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
