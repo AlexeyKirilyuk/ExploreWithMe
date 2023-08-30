@@ -1,9 +1,5 @@
 package ru.practicum.stats.service;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -12,6 +8,10 @@ import ru.practicum.dto.EndpointHitDto;
 import ru.practicum.dto.ViewStatsDto;
 import ru.practicum.stats.model.Hit;
 import ru.practicum.stats.repository.HitRepository;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -23,7 +23,7 @@ public class StatsServiceImpl implements StatsService {
     @Override
     @Transactional()
     public void saveHit(EndpointHitDto endpointHitDto) {
-    log.trace("Вызов метода saveHit ({})", endpointHitDto);
+        log.trace("Вызов метода saveHit ({})", endpointHitDto);
         Hit hit = Hit.builder()
                 .uri(endpointHitDto.getUri())
                 .ip(endpointHitDto.getIp())
@@ -34,8 +34,9 @@ public class StatsServiceImpl implements StatsService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ViewStatsDto> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, boolean unique) {
-    log.trace("Вызов метода getStats start = {}, end = {}, uris = {}, unique = {}", start, end, uris, unique);
+        log.trace("Вызов метода getStats start = {}, end = {}, uris = {}, unique = {}", start, end, uris, unique);
         List<ViewStatsDto> stats = new ArrayList<>();
 
         if (unique) {

@@ -17,7 +17,14 @@ import java.util.Map;
 
 public class StatsClient {
     @Value("${ewm-stats.url}")
+    private String path;
+
     private static String STATS_URL;
+
+    @Value("${name}")
+    public void setNameStatic(String path){
+        StatsClient.STATS_URL = path;
+    }
 
     private final RestTemplate restTemplate;
 
