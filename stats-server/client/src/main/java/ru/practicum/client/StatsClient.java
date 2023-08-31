@@ -22,7 +22,7 @@ public class StatsClient {
     private static String STATS_URL;
 
     @Value("${name}")
-    public void setNameStatic(String path){
+    public void setNameStatic(String path) {
         StatsClient.STATS_URL = path;
     }
 
