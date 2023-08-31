@@ -15,15 +15,6 @@ import java.util.List;
 import java.util.Map;
 
 public class StatsClient {
-//    @Value("${ewm-stats.url}")
-//    private String path;
-//
-//    private static String STATS_URL;
-//
-//    @Value("${ewm-stats.url}")
-//    public void setNameStatic(String path) {
-//        StatsClient.STATS_URL = path;
-//    }
     private static String STATS_URL = "http://localhost:9090";
 
     private final RestTemplate restTemplate;
