@@ -18,7 +18,7 @@ import java.util.Map;
 
 public class StatsClient {
     @Value("${services.stats-service.uri:http://localhost:9090}")
-    private String STATS_URL;
+    private String statsServiceUri;
     private final RestTemplate restTemplate;
 
     public StatsClient() {
@@ -26,12 +26,12 @@ public class StatsClient {
     }
 
     public void saveHit(EndpointHitDto endpointHitDto) {
-        final String url = STATS_URL + "/hit";
+        final String url = statsServiceUri + "/hit";
         restTemplate.postForEntity(url, endpointHitDto, Void.class);
     }
 
     public List<ViewStatsDto> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, boolean unique) {
-        final String url = STATS_URL + "/stats?start={start}&end={end}&uris={uris}&unique={unique}";
+        final String url = statsServiceUri + "/stats?start={start}&end={end}&uris={uris}&unique={unique}";
         ResponseEntity<List<ViewStatsDto>> response = restTemplate.exchange(
                 url,
                 HttpMethod.GET,
