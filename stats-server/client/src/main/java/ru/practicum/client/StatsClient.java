@@ -1,5 +1,7 @@
 package ru.practicum.client;
 
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -15,7 +17,17 @@ import java.util.List;
 import java.util.Map;
 
 public class StatsClient {
-    private static String STATS_URL = "http://localhost:9090";
+//    private static String STATS_URL = "http://localhost:9090";
+
+    @Value("${ewm-stats.uri:http://localhost:9090}")
+    private String path;
+
+    private static String STATS_URL;
+
+    @Value("${path}")
+    public void setNameStatic(String path){
+        StatsClient.STATS_URL = path;
+    }
 
     private final RestTemplate restTemplate;
 
