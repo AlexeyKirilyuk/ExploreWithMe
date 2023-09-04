@@ -17,19 +17,13 @@ import java.util.List;
 import java.util.Map;
 
 public class StatsClient {
-//    private static String STATS_URL = "http://localhost:9090";
-
-    @Value("${ewm-stats.uri:http://localhost:9090}")
-    private String path;
-
-    private static String STATS_URL;
-
-    @Value("${path}")
-    public void setNameStatic(String path) {
-        StatsClient.STATS_URL = path;
-    }
-
+    private static  String STATS_URL;
     private final RestTemplate restTemplate;
+public StatsClient(@Value("${services.stats-service.uri:http://localhost:9090}") String statsServiceUri, RestTemplate restTemplate){
+
+    this.STATS_URL = statsServiceUri;
+    this.restTemplate = restTemplate;
+}
 
     public StatsClient() {
         restTemplate = new RestTemplate(new HttpComponentsClientHttpRequestFactory());
