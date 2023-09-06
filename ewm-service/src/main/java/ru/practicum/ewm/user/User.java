@@ -1,7 +1,9 @@
-package ru.practicum.user;
+package ru.practicum.ewm.user;
 
 import lombok.*;
+
 import javax.persistence.*;
+
 
 @Getter
 @Setter
