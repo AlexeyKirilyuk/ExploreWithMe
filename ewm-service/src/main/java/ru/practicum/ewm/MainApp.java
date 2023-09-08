@@ -9,6 +9,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class MainApp {
 	public static void main(String[] args) {
 		SpringApplication.run(MainApp.class, args);
-		log.warn("     ***********************************  Запущен Explore With Me  ***********************************     ");
+		log.warn("      ***********************************  Запущен Explore With Me  ***********************************      ");
 	}
 }
