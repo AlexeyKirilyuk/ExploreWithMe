@@ -1,37 +1,42 @@
 package ru.practicum.client;
 
-
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import ru.practicum.dto.EndpointHitDto;
 import ru.practicum.dto.ViewStatsDto;
 
-
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
+@Component
 public class StatsClient {
-    @Value("${services.stats-service.uri:http://localhost:9090}")
-    private String statsServiceUri;
+
+    private static final String STATS_URL_DOCKER = "http://localhost:9090";
+
     private final RestTemplate restTemplate;
 
     public StatsClient() {
         restTemplate = new RestTemplate(new HttpComponentsClientHttpRequestFactory());
     }
 
-    public void saveHit(EndpointHitDto endpointHitDto) {
-        final String url = statsServiceUri + "/hit";
-        restTemplate.postForEntity(url, endpointHitDto, Void.class);
+    public void saveHit(EndpointHitDto inputHitDto) {
+        final String url = STATS_URL_DOCKER + "/hit";
+        restTemplate.postForEntity(url, inputHitDto, Void.class);
     }
 
-    public List<ViewStatsDto> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, boolean unique) {
-        final String url = statsServiceUri + "/stats?start={start}&end={end}&uris={uris}&unique={unique}";
+    public List<ViewStatsDto> getStats(LocalDateTime startLocalDateTime, LocalDateTime endLocalDateTime, String[] uris,
+                                       boolean unique) {
+        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String start = startLocalDateTime.format(outputFormatter);
+        String end = endLocalDateTime.format(outputFormatter);
+        final String url = STATS_URL_DOCKER + "/stats?start={start}&end={end}&uris={uris}&unique={unique}";
         ResponseEntity<List<ViewStatsDto>> response = restTemplate.exchange(
                 url,
                 HttpMethod.GET,
