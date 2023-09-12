@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.annotation.Validated;
 import ru.practicum.event.dto.*;
 import ru.practicum.event.service.EventService;
 import ru.practicum.exception.BadRequestException;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
+@Validated
 @RestController()
 @RequestMapping("/users/{userId}/events")
 @RequiredArgsConstructor
@@ -39,6 +41,7 @@ public class PrivateEventController {
         log.info("Получен {} запрос к {} от {} ", httpServletRequest.getMethod(),
                                                   httpServletRequest.getRequestURI(),
                                                   httpServletRequest.getRemoteAddr());
+        log.info("NewEventDto newEventDto {} ", newEventDto);
         return eventService.createEvent(newEventDto, userId);
 
     }

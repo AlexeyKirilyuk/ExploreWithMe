@@ -57,30 +57,29 @@ public class EventServiceImpl implements EventService {
                 .orElseThrow(() -> new NotFoundException("Пользователь c id " + userId + " не найден"));
         Category category = categoryRepository.findById(newEventDto.getCategory())
                 .orElseThrow(() -> new NotFoundException(" Категория с " + newEventDto.getCategory() + " не найдена"));
-        if (newEventDto.getEventDate().isBefore(LocalDateTime.now().minusHours(2L))) {
-            System.out.println("ОШ2");
+       if (newEventDto.getEventDate().isBefore(LocalDateTime.now().minusHours(2L))) {
             throw new BadRequestException("Событие не может быть раньше, чем через два часа от текущего момента");
-        }
-        Location eventLocation = locationRepository.save(newEventDto.getLocation());
-        Event newEvent = Event.builder()
-                .annotation(newEventDto.getAnnotation())
-                .category(category)
-                .createdOn(LocalDateTime.now())
-                .description(newEventDto.getDescription())
-                .eventDate(newEventDto.getEventDate())
-                .initiator(user)
-                .location(eventLocation)
-                .paid(newEventDto.getPaid() != null && newEventDto.getPaid())
-                .participantLimit(newEventDto.getParticipantLimit() == null ? 0 : newEventDto.getParticipantLimit())
-                .requestModeration(newEventDto.getRequestModeration() == null || newEventDto.getRequestModeration())
-                .state(State.PENDING)
-                .title(newEventDto.getTitle())
-                .confirmedRequests(0L)
-                .views(0L)
-                .build();
-        newEvent = eventRepository.save(newEvent);
-        log.info("Создано новое событие= " + newEvent.getTitle());
-        return eventMapstructMapper.eventToEventOutDto(newEvent);
+       }
+            Location eventLocation = locationRepository.save(newEventDto.getLocation());
+            Event newEvent = Event.builder()
+                    .annotation(newEventDto.getAnnotation())
+                    .category(category)
+                    .createdOn(LocalDateTime.now())
+                    .description(newEventDto.getDescription())
+                    .eventDate(newEventDto.getEventDate())
+                    .initiator(user)
+                    .location(eventLocation)
+                    .paid(newEventDto.getPaid() != null && newEventDto.getPaid())
+                    .participantLimit(newEventDto.getParticipantLimit() == null ? 0 : newEventDto.getParticipantLimit())
+                    .requestModeration(newEventDto.getRequestModeration() == null || newEventDto.getRequestModeration())
+                    .state(State.PENDING)
+                    .title(newEventDto.getTitle())
+                    .confirmedRequests(0L)
+                    .views(0L)
+                    .build();
+            newEvent = eventRepository.save(newEvent);
+            log.info("Создано новое событие= " + newEvent.getTitle());
+            return eventMapstructMapper.eventToEventOutDto(newEvent);
     }
 
     @Override
