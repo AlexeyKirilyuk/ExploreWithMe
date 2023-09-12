@@ -39,8 +39,6 @@ services:
       - SPRING_DRIVER_CLASS_NAME=org.postgresql.Driver
       - stats-server.url=http://localhost:9090
 
-
-
   ewm-db:
     image: postgres:14-alpine
     container_name: ewm-db
