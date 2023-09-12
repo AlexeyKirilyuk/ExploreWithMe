@@ -17,7 +17,7 @@ import java.util.Map;
 
 @Component
 public class StatsClient {
-    private static final String STATS_URL_DOCKER = "http://stats-server:9090";
+    private static final String STATS_URL_DOCKER = "http://localhost:9090";
 
 
     private final RestTemplate restTemplate;

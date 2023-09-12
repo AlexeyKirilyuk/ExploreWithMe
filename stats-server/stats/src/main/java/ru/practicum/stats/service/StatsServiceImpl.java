@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.dto.EndpointHitDto;
 import ru.practicum.dto.ViewStatsDto;
+import ru.practicum.stats.exception.BadRequestException;
 import ru.practicum.stats.model.Hit;
 import ru.practicum.stats.repository.HitRepository;
 
@@ -38,7 +39,9 @@ public class StatsServiceImpl implements StatsService {
     public List<ViewStatsDto> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, boolean unique) {
         log.trace("Вызов метода getStats start = {}, end = {}, uris = {}, unique = {}", start, end, uris, unique);
         List<ViewStatsDto> stats = new ArrayList<>();
-
+        if (end.isBefore(start)) {
+            throw new BadRequestException("Получение статистики по посещениям с неверными датами начала и конца диапазона времени)");
+        }
         if (unique) {
             if (uris == null) {
                 stats = hitRepository.getAllUniqueStats(start, end);
