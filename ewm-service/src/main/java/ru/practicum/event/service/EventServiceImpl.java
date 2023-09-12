@@ -1,13 +1,15 @@
 package ru.practicum.event.service;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import ru.practicum.client.StatsClient;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.category.model.Category;
 import ru.practicum.category.repository.CategoryRepository;
+import ru.practicum.client.StatsClient;
+import ru.practicum.dto.ViewStatsDto;
 import ru.practicum.event.dto.*;
 import ru.practicum.event.enumerated.Sorting;
 import ru.practicum.event.enumerated.State;
@@ -27,13 +29,11 @@ import ru.practicum.requests.repository.RequestRepository;
 import ru.practicum.requests.status.Status;
 import ru.practicum.user.model.User;
 import ru.practicum.user.repository.UserRepository;
-import ru.practicum.dto.ViewStatsDto;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -57,29 +57,29 @@ public class EventServiceImpl implements EventService {
                 .orElseThrow(() -> new NotFoundException("Пользователь c id " + userId + " не найден"));
         Category category = categoryRepository.findById(newEventDto.getCategory())
                 .orElseThrow(() -> new NotFoundException(" Категория с " + newEventDto.getCategory() + " не найдена"));
-       if (newEventDto.getEventDate().isBefore(LocalDateTime.now().minusHours(2L))) {
-            throw new BadRequestException("Событие не может быть раньше, чем через два часа от текущего момента");
-       }
-            Location eventLocation = locationRepository.save(newEventDto.getLocation());
-            Event newEvent = Event.builder()
-                    .annotation(newEventDto.getAnnotation())
-                    .category(category)
-                    .createdOn(LocalDateTime.now())
-                    .description(newEventDto.getDescription())
-                    .eventDate(newEventDto.getEventDate())
-                    .initiator(user)
-                    .location(eventLocation)
-                    .paid(newEventDto.getPaid() != null && newEventDto.getPaid())
-                    .participantLimit(newEventDto.getParticipantLimit() == null ? 0 : newEventDto.getParticipantLimit())
-                    .requestModeration(newEventDto.getRequestModeration() == null || newEventDto.getRequestModeration())
-                    .state(State.PENDING)
-                    .title(newEventDto.getTitle())
-                    .confirmedRequests(0L)
-                    .views(0L)
-                    .build();
-            newEvent = eventRepository.save(newEvent);
-            log.info("Создано новое событие= " + newEvent.getTitle());
-            return eventMapstructMapper.eventToEventOutDto(newEvent);
+        if (newEventDto.getEventDate() != null) {
+            dateTimeValidate(newEventDto.getEventDate());
+        }
+        Location eventLocation = locationRepository.save(newEventDto.getLocation());
+        Event newEvent = Event.builder()
+                .annotation(newEventDto.getAnnotation())
+                .category(category)
+                .createdOn(LocalDateTime.now())
+                .description(newEventDto.getDescription())
+                .eventDate(newEventDto.getEventDate())
+                .initiator(user)
+                .location(eventLocation)
+                .paid(newEventDto.getPaid() != null && newEventDto.getPaid())
+                .participantLimit(newEventDto.getParticipantLimit() == null ? 0 : newEventDto.getParticipantLimit())
+                .requestModeration(newEventDto.getRequestModeration() == null || newEventDto.getRequestModeration())
+                .state(State.PENDING)
+                .title(newEventDto.getTitle())
+                .confirmedRequests(0L)
+                .views(0L)
+                .build();
+        newEvent = eventRepository.save(newEvent);
+        log.info("Создано новое событие= " + newEvent.getTitle());
+        return eventMapstructMapper.eventToEventOutDto(newEvent);
     }
 
     @Override
@@ -108,6 +108,9 @@ public class EventServiceImpl implements EventService {
     public EventOutDto patchEvent(Long userId, Long eventId, UpdateEventUserDto updateEventUserDto) {
         Event event = eventRepository.findEventByIdWithCategoryAndLocation(eventId)
                 .orElseThrow(() -> new NotFoundException("Событие с id= " + eventId + " не найдено"));
+        if (updateEventUserDto.getEventDate() != null) {
+            dateTimeValidate(updateEventUserDto.getEventDate());
+        }
         if (event.getState().equals(State.PUBLISHED)) {
             throw new ConflictException("Событие не должно быть опубликовано");
         }
@@ -308,5 +311,13 @@ public class EventServiceImpl implements EventService {
     private long getViews(LocalDateTime start, LocalDateTime end, String[] uris, boolean unique) {
         List<ViewStatsDto> eventStats = statsClient.getStats(start, end, uris, unique);
         return eventStats.get(0).getHits();
+    }
+
+    private void dateTimeValidate(LocalDateTime localDateTime) {
+        if (localDateTime.isBefore(LocalDateTime.now().plusHours(2))) {
+            throw new BadRequestException(
+                    "Вы не можете добавить событие, которое проходит раньше чем за два часа от текущей даты "
+                            + localDateTime);
+        }
     }
 }
