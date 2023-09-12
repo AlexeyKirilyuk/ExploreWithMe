@@ -37,7 +37,9 @@ services:
       - SPRING_DATASOURCE_USER=postgres
       - SPRING_DATASOURCE_PASSWORD=iamroot
       - SPRING_DRIVER_CLASS_NAME=org.postgresql.Driver
-      - EWM_STATS_URL=http://localhost:9090
+      - stats-server.url=http://localhost:9090
+
+
 
   ewm-db:
     image: postgres:14-alpine

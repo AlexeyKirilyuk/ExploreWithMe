@@ -17,8 +17,8 @@ import java.util.Map;
 
 @Component
 public class StatsClient {
-    private static final String STATS_URL_SAVE = "http://stats-server:9090";
-    private static final String STATS_URL_GET = "http://localhost:9090";
+    private static final String STATS_URL_DOCKER =  "http://stats-server:9090";
+
 
     private final RestTemplate restTemplate;
 
@@ -27,7 +27,7 @@ public class StatsClient {
     }
 
     public void saveHit(EndpointHitDto inputHitDto) {
-        final String url = STATS_URL_SAVE + "/hit";
+        final String url = STATS_URL_DOCKER + "/hit";
         restTemplate.postForEntity(url, inputHitDto, Void.class);
     }
 
@@ -36,7 +36,7 @@ public class StatsClient {
         DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String start = startLocalDateTime.format(outputFormatter);
         String end = endLocalDateTime.format(outputFormatter);
-        final String url = STATS_URL_GET + "/stats?start={start}&end={end}&uris={uris}&unique={unique}";
+        final String url = STATS_URL_DOCKER + "/stats?start={start}&end={end}&uris={uris}&unique={unique}";
         ResponseEntity<List<ViewStatsDto>> response = restTemplate.exchange(
                 url,
                 HttpMethod.GET,
