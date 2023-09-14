@@ -7,11 +7,9 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.comments.dto.CommentDto;
 import ru.practicum.comments.dto.InputCommentDto;
 import ru.practicum.comments.service.CommentsService;
-import ru.practicum.exception.BadRequestException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.time.LocalDateTime;
 
 @Slf4j
 @RestController()
