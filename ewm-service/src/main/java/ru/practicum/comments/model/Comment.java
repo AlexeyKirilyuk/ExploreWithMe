@@ -10,7 +10,6 @@ import ru.practicum.user.model.User;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder

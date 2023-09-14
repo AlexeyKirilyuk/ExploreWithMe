@@ -60,12 +60,4 @@ public class PrivateComments  {
                                                   httpServletRequest.getRemoteAddr());
         commentsService.removeByCommentIdAndAuthorId(commentId, userId);
     }
-
-    private void dateTimeValidate(LocalDateTime localDateTime) {
-        if (localDateTime.isBefore(LocalDateTime.now().plusHours(2))) {
-            throw new BadRequestException(
-                    "Вы не можете добавить событие, которое проходит раньше чем за два часа от текущей даты "
-                            + localDateTime);
-        }
-    }
 }

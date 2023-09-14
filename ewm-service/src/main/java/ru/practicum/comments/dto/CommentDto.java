@@ -1,10 +1,11 @@
 package ru.practicum.comments.dto;
 
-import lombok.Data;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Data
+@Builder
 public class CommentDto {
 
     private final Long id;
